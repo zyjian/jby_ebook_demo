@@ -3,22 +3,32 @@ package com.jtcloud.jby_ebook_demo;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
-import android.widget.Toast;
-
+import android.widget.AdapterView;
+import android.widget.ListView;
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.jtcloud.jbyebook.EbookItem;
+import com.jtcloud.jbyebook.EbookLoadCallback;
+import com.jtcloud.jbyebook.EbookManager;
 import com.jtcloud.jbyebook.WebViewActivity;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class MainActivity extends AppCompatActivity {
+
+    private ListView listView;
+    private CustomAdapter adapter;
+    List<EbookItem> listItems = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
@@ -28,21 +38,39 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
-        // 找到按钮
-        Button myButton = findViewById(R.id.button);
-
-        // 设置点击事件监听器
-        myButton.setOnClickListener(new View.OnClickListener() {
+        EbookManager ebookManager = EbookManager.getInstance();
+        ebookManager.configToken("3aadbfcb4d45f55338fed3df7e02b79c1030ab18774de427777c8a13a330ae6a");
+        ebookManager.loadData(new EbookLoadCallback() {
             @Override
-            public void onClick(View v) {
-                // 在这里处理按钮点击事件
-//                Toast.makeText(MainActivity.this, "Button Clicked", Toast.LENGTH_SHORT).show();
+            public void onDataLoaded(List<EbookItem> items) {
+                // 这里可以处理加载完成的数据，例如更新UI
+                listItems.clear();
+                listItems.addAll(items);
+                adapter.notifyDataSetChanged();
+
+            }
+        });
+
+        listView = findViewById(R.id.list_view);
+        adapter = new CustomAdapter(this, listItems);
+        listView.setAdapter(adapter);
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                // 在这里处理点击事件
+                // 参数position是被点击项的位置，id是数据集中的行ID
+                EbookItem selectedItem = listItems.get(position);
+                System.out.println(selectedItem.getText());
 
                 Intent intent = new Intent(MainActivity.this, WebViewActivity.class);
-                intent.putExtra("id", "4508");
+                intent.putExtra("id", selectedItem.getId().toString());
                 startActivity(intent);
 
             }
         });
+
     }
+
+
 }

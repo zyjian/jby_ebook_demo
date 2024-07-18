@@ -34,7 +34,12 @@ dependencies {
     implementation libs.material
     implementation libs.activity
     implementation libs.constraintlayout
+    // 网络图片
+    implementation 'com.squareup.picasso:picasso:2.71828'
+
+    implementation 'com.alibaba:fastjson:1.2.75'
     implementation files('libs/jbyEbook-release.aar')
+    
     testImplementation libs.junit
     androidTestImplementation libs.ext.junit
     androidTestImplementation libs.espresso.core
