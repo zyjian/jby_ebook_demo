@@ -15,7 +15,6 @@
     implementation 'com.alibaba:fastjson:1.2.75'
 
 #### 3 初始化 EbookManager 设置token, 并获取数据
-    https://new.jingbanyun.com/api/Booktext/textbook_list?token=3aadbfcb4d45f55338fed3df7e02b79c1030ab18774de427777c8a13a330ae6a
     ```
     EbookManager ebookManager = EbookManager.getInstance();
     ebookManager.configToken("3aadbfcb4d45f55338fed3df7e02b79c1030ab18774de427777c8a13a330ae6a");
