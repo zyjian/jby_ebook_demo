@@ -14,32 +14,49 @@
     2. app/build.gradle -> dependencies 添加以下依赖
     implementation 'com.alibaba:fastjson:1.2.75'
 
-#### 3 初始化 EbookManager 设置token, 并获取数据
+#### 3 初始化 EbookManager 设置token
     ```
     EbookManager ebookManager = EbookManager.getInstance();
     ebookManager.configToken("3aadbfcb4d45f55338fed3df7e02b79c1030ab18774de427777c8a13a330ae6a");
-    ebookManager.loadData(new EbookLoadCallback() {
-            @Override
-            public void onDataLoaded(List<EbookItem> items) {
-                // 这里可以处理加载完成的数据，例如更新UI
-                listItems.clear();
-                listItems.addAll(items);
-                adapter.notifyDataSetChanged();
-
-            }
-        });
+  
 
     ```
+#### 4 获取列表数据 有两种方式2选一即可
+    1. 直接获取列表数据模型
+
+```
+  ebookManager.loadData(new EbookLoadCallback() {
+        @Override
+        public void onDataLoaded(List<EbookItem> items) {
+            // 这里可以处理加载完成的数据，例如更新UI
+            listItems.clear();
+            listItems.addAll(items);
+            adapter.notifyDataSetChanged();
+        
+        }
+  });
+```
+
+    2. 间接获取安全数据（内部有加密鉴权）注意注意注意：返回是json字符串
+
+```
+ebookManager.loadRowData(new RawLoadCallback() {
+    @Override
+    public void onDataLoaded(String raw) {
+        System.out.println(raw);
+    }
+});
+```
 
 
 
-#### 4 打开电子课本页面
+#### 5 打开电子课本页面
 ```
 Intent intent = new Intent(MainActivity.this, WebViewActivity.class);
                 intent.putExtra("id", "4508");
                 startActivity(intent);
                 
-//这里的id 是从上面获取的list中 EbookItem 的id字段获取得到
+//这里的 是课程id, 示例中的id 是从资源列表接口中获取的
                 
 ```
 
