@@ -12,9 +12,10 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.jtcloud.jbyebook.EbookItem;
-import com.jtcloud.jbyebook.EbookLoadCallback;
 import com.jtcloud.jbyebook.EbookManager;
 import com.jtcloud.jbyebook.WebViewActivity;
+import com.jtcloud.jbyebook.interfaces.EbookLoadCallback;
+import com.jtcloud.jbyebook.interfaces.RawLoadCallback;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,6 +41,9 @@ public class MainActivity extends AppCompatActivity {
 
         EbookManager ebookManager = EbookManager.getInstance();
         ebookManager.configToken("3aadbfcb4d45f55338fed3df7e02b79c1030ab18774de427777c8a13a330ae6a");
+        
+        
+        //第一种方式 获取列表数据模型
         ebookManager.loadData(new EbookLoadCallback() {
             @Override
             public void onDataLoaded(List<EbookItem> items) {
@@ -48,6 +52,14 @@ public class MainActivity extends AppCompatActivity {
                 listItems.addAll(items);
                 adapter.notifyDataSetChanged();
 
+            }
+        });
+
+        //第二种方式 直接获取安全数据（内部有加密鉴权）注意注意注意：返回是json字符串
+        ebookManager.loadRawData(new RawLoadCallback() {
+            @Override
+            public void onDataLoaded(String raw) {
+                System.out.println(raw);
             }
         });
 
