@@ -40,7 +40,7 @@
     2. 间接获取安全数据（内部有加密鉴权）注意注意注意：返回是json字符串
 
 ```
-ebookManager.loadRowData(new RawLoadCallback() {
+ebookManager.loadRawData(new RawLoadCallback() {
     @Override
     public void onDataLoaded(String raw) {
         System.out.println(raw);
