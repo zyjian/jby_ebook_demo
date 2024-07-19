@@ -16,6 +16,7 @@ import com.jtcloud.jbyebook.EbookManager;
 import com.jtcloud.jbyebook.WebViewActivity;
 import com.jtcloud.jbyebook.interfaces.EbookLoadCallback;
 import com.jtcloud.jbyebook.interfaces.RawLoadCallback;
+import com.jtcloud.jbyebook.interfaces.SignLoadCallback;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -55,11 +56,20 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        //第二种方式 直接获取安全数据（内部有加密鉴权）注意注意注意：返回是json字符串
-        ebookManager.loadRawData(new RawLoadCallback() {
+        //第二种方式 获取签名(app 应该缓存起来)
+        ebookManager.loadSignData(new SignLoadCallback() {
             @Override
-            public void onDataLoaded(String raw) {
-                System.out.println(raw);
+            public void onDataLoaded(String sign) {
+                System.out.println(sign);
+
+
+                // 使用改签获取数据
+                ebookManager.loadRawData(sign, new RawLoadCallback() {
+                    @Override
+                    public void onDataLoaded(String raw) {
+                        System.out.println(raw);
+                    }
+                });
             }
         });
 
