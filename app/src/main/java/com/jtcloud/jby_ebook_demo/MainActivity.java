@@ -70,6 +70,14 @@ public class MainActivity extends AppCompatActivity {
                         System.out.println(raw);
                     }
                 });
+
+                // 使用改签获取目录数据
+                ebookManager.loadRawCatalogueData(sign, new RawLoadCallback() {
+                    @Override
+                    public void onDataLoaded(String raw) {
+                        System.out.println(raw);
+                    }
+                });
             }
         });
 

@@ -37,7 +37,7 @@
   });
 ```
 
-    2. 通过签名 获取列表数据模型
+    2. 通过签名获取数据 列表、目录数据
 
 ```
         //步骤一 获取签名 （app 应该缓存起来起来 ）
@@ -47,8 +47,16 @@
                 System.out.println(sign);
 
 
-                // 使用签名 获取数据 返回的 json 字符串
+                // 使用改签获取数据
                 ebookManager.loadRawData(sign, new RawLoadCallback() {
+                    @Override
+                    public void onDataLoaded(String raw) {
+                        System.out.println(raw);
+                    }
+                });
+                
+                // 使用改签获取目录数据
+                ebookManager.loadRawCatalogueData(sign, new RawLoadCallback() {
                     @Override
                     public void onDataLoaded(String raw) {
                         System.out.println(raw);
@@ -60,12 +68,13 @@
 ```
 
 
-
-#### 5 打开电子课本页面
+#### 5 打开电子课本页面（可指定页码参数）
 ```
 Intent intent = new Intent(MainActivity.this, WebViewActivity.class);
-                intent.putExtra("id", "4508");
-                startActivity(intent);
+intent.putExtra("id", selectedItem.getId().toString());
+//页面参数（非必填 不传就是起始页）
+intent.putExtra("page_start", "4");
+startActivity(intent);
                 
 //这里的 是课程id, 示例中的id 是从资源列表接口中获取的
                 
