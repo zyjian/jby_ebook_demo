@@ -27,8 +27,16 @@ ebookManager.setEvaluationListener(new EvaluationListener() {
     public void onEvaluation(String json) {
         System.out.println("onEvaluation");
         System.out.println(json);
+        
+        /*
+        json 是 json 数据
+        {"bookId":4510,"unit":41,"content":[{"en_text":"Hi"}......]}
+        
+        */
     }
 });
+
+
  
 ```
 
