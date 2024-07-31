@@ -11,15 +11,20 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.jtcloud.jbyebook.EbookItem;
 import com.jtcloud.jbyebook.EbookManager;
 import com.jtcloud.jbyebook.WebViewActivity;
 import com.jtcloud.jbyebook.interfaces.EbookLoadCallback;
+import com.jtcloud.jbyebook.interfaces.EvaluationListener;
 import com.jtcloud.jbyebook.interfaces.RawLoadCallback;
 import com.jtcloud.jbyebook.interfaces.SignLoadCallback;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -41,33 +46,54 @@ public class MainActivity extends AppCompatActivity {
 
 
         EbookManager ebookManager = EbookManager.getInstance();
-        ebookManager.configToken("3aadbfcb4d45f55338fed3df7e02b79c1030ab18774de427777c8a13a330ae6a");
-        
-        
-        //第一种方式 获取列表数据模型
-        ebookManager.loadData(new EbookLoadCallback() {
-            @Override
-            public void onDataLoaded(List<EbookItem> items) {
-                // 这里可以处理加载完成的数据，例如更新UI
-                listItems.clear();
-                listItems.addAll(items);
-                adapter.notifyDataSetChanged();
+        ebookManager.configToken("xiaoyuanbd284dbe3d7bdf");
 
+
+        // 设置监听
+        ebookManager.setEvaluationListener(new EvaluationListener() {
+            @Override
+            public void onEvaluation(String json) {
+                System.out.println("onEvaluation");
+                System.out.println(json);
             }
         });
 
-        //第二种方式 获取签名(app 应该缓存起来)
+
+        //获取签名
         ebookManager.loadSignData(new SignLoadCallback() {
             @Override
             public void onDataLoaded(String sign) {
                 System.out.println(sign);
 
 
-                // 使用改签获取数据
+                // 使用签名获取数据
                 ebookManager.loadRawData(sign, new RawLoadCallback() {
+
                     @Override
                     public void onDataLoaded(String raw) {
-                        System.out.println(raw);
+                        try {
+                            JSONObject jsonObject = JSON.parseObject(raw);
+                            JSONArray jsonArray = jsonObject.getJSONArray("list");
+
+                            List<EbookItem> tempList = new ArrayList<EbookItem>();
+                            // 打印或处理list
+                            for (Object item : jsonArray) {
+                                Map map = (Map) item;
+                                tempList.add(new EbookItem(
+                                        map.get("server_path").toString(),
+                                        map.get("name").toString(),
+                                        (Integer) map.get("id")
+                                ));
+                            }
+                            listItems.clear();
+                            listItems.addAll(tempList);
+                            adapter.notifyDataSetChanged();
+
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+
+
                     }
                 });
 
@@ -80,6 +106,7 @@ public class MainActivity extends AppCompatActivity {
                 });
             }
         });
+
 
         listView = findViewById(R.id.list_view);
         adapter = new CustomAdapter(this, listItems);
@@ -95,10 +122,14 @@ public class MainActivity extends AppCompatActivity {
 
                 Intent intent = new Intent(MainActivity.this, WebViewActivity.class);
                 intent.putExtra("id", selectedItem.getId().toString());
+                //页面参数（非必填 不传就是起始页）
+                intent.putExtra("page_start", "4");
                 startActivity(intent);
 
             }
         });
+
+
 
     }
 
