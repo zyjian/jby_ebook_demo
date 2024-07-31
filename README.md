@@ -16,9 +16,10 @@
 
 #### 3 初始化 EbookManager 设置token，监听事件
     ##### 3.1 设置token 
-    ```
+```
     EbookManager ebookManager = EbookManager.getInstance();
     ebookManager.configToken("3aadbfcb4d45f55338fed3df7e02b79c1030ab18774de427777c8a13a330ae6a");
+```
   
     ##### 3.2 设置监听（sdk 点击的跟读的事件）
 ```
@@ -36,11 +37,8 @@ ebookManager.setEvaluationListener(new EvaluationListener() {
     }
 });
 
-
- 
 ```
 
-    ```
 #### 4 获取列表数据(先获取签名)，根据签名获取列表数据
 
     1. 通过签名获取数据 
