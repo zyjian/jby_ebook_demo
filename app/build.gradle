@@ -7,7 +7,7 @@ android {
     compileSdk 34
 
     defaultConfig {
-        applicationId "com.jtcloud.jby_ebook_demo"
+        applicationId "com.jtcloud.jby_ebook_yuan"
         minSdk 24
         targetSdk 34
         versionCode 1
@@ -15,9 +15,46 @@ android {
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
+    signingConfigs {
+        release {
+            Properties properties = new Properties()
+            File propertiesFile = project.file('keystore.properties')
+            if (propertiesFile != null && propertiesFile.exists()) {
+                properties.load(propertiesFile.newDataInputStream())
+                storeFile file(properties.getProperty('storeFile'))
+                storePassword properties.getProperty('storePassword')
+                keyAlias properties.getProperty('keyAlias')
+                keyPassword properties.getProperty('keyPassword')
+            }
+        }
+        debug {
+            Properties properties = new Properties()
+            File propertiesFile = project.file('keystore.properties')
+            if (propertiesFile != null && propertiesFile.exists()) {
+                properties.load(propertiesFile.newDataInputStream())
+                storeFile file(properties.getProperty('storeFile'))
+                storePassword properties.getProperty('storePassword')
+                keyAlias properties.getProperty('keyAlias')
+                keyPassword properties.getProperty('keyPassword')
+            }
+        }
+        profile {
+            Properties properties = new Properties()
+            File propertiesFile = project.file('keystore.properties')
+            if (propertiesFile != null && propertiesFile.exists()) {
+                properties.load(propertiesFile.newDataInputStream())
+                storeFile file(properties.getProperty('storeFile'))
+                storePassword properties.getProperty('storePassword')
+                keyAlias properties.getProperty('keyAlias')
+                keyPassword properties.getProperty('keyPassword')
+            }
+        }
+
+    }
 
     buildTypes {
         release {
+            signingConfig signingConfigs.release
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
